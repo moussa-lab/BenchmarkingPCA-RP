@@ -805,24 +805,7 @@ def run_pca_experiment(data_path, components_list, output_dir, dataset_name):
                 sheet_name = f"PCA_{n_components}"
                 pca_df.to_excel(writer, sheet_name=sheet_name, index=False)
         print(f"PCA components saved to {pca_output_path}")
-if __name__ == "__main__":
-    # Paths to the PBMC datasets
-    pbmc_data_paths = {
-        'Labeled_PBMC': '../Datasets/PBMC-Zheng2017/PBMC_SC1.csv',
-        'Unlabeled_PBMC': '../Datasets/Unlabeled_PBMC/unlabled_PBMC.csv'
-    }
 
-    # Components to investigate
-    components_to_test = [200, 400, 600, 800, 1000]
-
-    # Output directory for saving results
-    output_directory = "./pca_results"
-    os.makedirs(output_directory, exist_ok=True)
-
-    # Run the experiment for each dataset
-    for dataset_name, data_path in pbmc_data_paths.items():
-        print(f"\n=== Running PCA Experiment for {dataset_name} ===")
-        run_pca_experiment(data_path, components_to_test, output_directory, dataset_name)
 def load_and_plot_and_save_combined_column_sums(file_path1, dataset_name1, file_path2, dataset_name2, save_path):
     try:
         # Load the column sums CSV files
@@ -870,12 +853,41 @@ save_plot_path = './pca_results/Combined_Column_Means_Plot.png'
 load_and_plot_and_save_combined_column_sums(labeled_pbmc_file, 'Labeled PBMC', unlabeled_pbmc_file, 'Unlabeled PBMC', save_plot_path)
 
 if __name__ == "__main__":
+    # Paths to the PBMC datasets
+    pbmc_data_paths = {
+        'Labeled_PBMC': '../Datasets/PBMC-Zheng2017/PBMC_SC1.csv',
+        'Unlabeled_PBMC': '../Datasets/Unlabeled_PBMC/unlabeled_PBMC.csv'  # fixed typo here
+    }
+
+    # Components to investigate
+    components_to_test = [200, 400, 600, 800, 1000]
+
+    # Output directory for saving results
+    output_directory = "./pca_results"
+    os.makedirs(output_directory, exist_ok=True)
+
+    # Run the PCA experiment for each dataset
+    for dataset_name, data_path in pbmc_data_paths.items():
+        print(f"\n=== Running PCA Experiment for {dataset_name} ===")
+        run_pca_experiment(data_path, components_to_test, output_directory, dataset_name)
+
+    # File paths for the column sums CSV files
+    labeled_pbmc_file = './pca_results/Labeled_PBMC_column_sums.csv'
+    unlabeled_pbmc_file = './pca_results/Unlabeled_PBMC_column_sums.csv'
+    save_plot_path = './pca_results/Combined_Column_Means_Plot.png'
+
+    # Plotting and saving for both datasets
+    load_and_plot_and_save_combined_column_sums(
+        labeled_pbmc_file,
+        'Labeled PBMC',
+        unlabeled_pbmc_file,
+        'Unlabeled PBMC',
+        save_plot_path
+    )
+
     # Range for number of components
-    n_components_range = list(range(5, 25, 1))  + list(range(25, 1001, 25)) 
-    #n_components_range = list(range(5, 16, 5)) + list(range(50, 101, 50))
+    n_components_range = list(range(5, 25, 1)) + list(range(25, 1001, 25))
 
-    # Output directory
+    # Output directory for full experiment
     output_directory = "./output"
-
-    # Process all datasets
     process_all_datasets(datasets_info, n_components_range, output_dir=output_directory)
