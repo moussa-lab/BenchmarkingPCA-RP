@@ -1,6 +1,6 @@
-# Dimensionality Reduction and Clustering for scRNA-seq Data
+# A Benchmarking Study of Random Projections and Principal Components for Dimensionality Reduction Strategies in Single Cell Analysis
 
-This repository contains Python scripts for evaluating various dimensionality reduction methods, including PCA (Principal Component Analysis), Random Projection (Gaussian and Sparse), and UMAP, combined with clustering algorithms on scRNA-seq datasets. The code applies these techniques on different datasets, calculates clustering metrics, and generates visualizations.
+This repository contains Python scripts for evaluating various dimensionality reduction methods, including PCA (Principal Component Analysis) with Full SVD (Singular Value Decomposition) and Randomized SVD, Random Projection (Gaussian and Sparse), and UMAP, combined with clustering algorithms (Hierarchical clustering and Spherical KMeans) on scRNA-seq datasets. The code applies these techniques on different datasets, calculates clustering metrics, and generates visualizations.
 
 ## Table of Contents
 - [Features](#features)
@@ -73,4 +73,7 @@ Results are saved in `output` and `pca_results` directories:
 - `PCA_Plots/` and `RandomProjection_Plots/`: 2D visualizations for PCA and Random Projection.
 - `Metrics_Plots/` and `Timing_Plots/`: Evaluation metrics and timing results for each dataset.
 - `Combined_Column_Means_Plot.png`: Mean plot for total column means across components in `pca_results`.
+
+## Acknowledgments
+This work is supported by the following grants: NSF-2341725, NIH-NCI K25CA270079, OU-BIC2.0
 
