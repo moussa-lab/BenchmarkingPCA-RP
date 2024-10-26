@@ -64,22 +64,21 @@ pip install -r requirements.txt
 ```
 ## Usage
 
+1. **Preprocess the Unlabeled PBMC Dataset**  
+   To preprocess the unlabeled PBMC dataset, open and run the following Jupyter Notebook:
 
-1. To preprocess the unlabeled PBMC dataset, use the Jupyter Notebook:
+   - [PBMC_Unlabeled_Dataset_Construction.ipynb](PBMC_Unlabeled_Dataset_Construction.ipynb)
 
-   [PBMC_Unlabeled_Dataset_Construction.ipynb](PBMC_Unlabeled_Dataset_Construction.ipynb)
+2. **Run the Main Benchmarking Code**  
+   You can run the main benchmarking code using either of these options:
 
-You have two options for running the main benchmarking code:
+   - **Jupyter Notebook**: If you prefer an interactive notebook environment, use:
+     - [Benchmarking-RP-PCA.ipynb](Benchmarking-RP-PCA.ipynb)
 
-1. **Jupyter Notebook**: If you prefer a notebook environment, use:
-
-   [Benchmarking-RP-PCA.ipynb](Benchmarking-RP-PCA.ipynb)
-
-2. **Python Script**: Alternatively, run the main script directly:
-
-   ```bash
-   python main.py
-```
+   - **Python Script**: Alternatively, run the script directly from the command line:
+     ```bash
+     python main.py
+     ```
 ## Results
 
 Results are saved in `output` and `pca_results` directories:
