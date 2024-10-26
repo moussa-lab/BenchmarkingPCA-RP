@@ -29,13 +29,13 @@ Each dataset should be placed in the `Datasets` folder with the following struct
 ```
 Datasets/
 ├── PBMC-Zheng2017/
-│&nbsp;&nbsp;&nbsp;&nbsp;├── PBMC_SC1.csv
-│&nbsp;&nbsp;&nbsp;&nbsp;└── PBMCLabels_SC1ClusterLabels.csv
+│   ├── PBMC_SC1.csv
+│   └── PBMCLabels_SC1ClusterLabels.csv
 ├── Jurkat_Cleaned/
-│&nbsp;&nbsp;&nbsp;&nbsp;├── Jurkat293T_Clean.csv
-│&nbsp;&nbsp;&nbsp;&nbsp;└── Jurkat293T_Clean_TrueLabels.csv
+│   ├── Jurkat293T_Clean.csv
+│   └── Jurkat293T_Clean_TrueLabels.csv
 └── Covid19TCells/
-&nbsp;&nbsp;&nbsp;&nbsp;├── COVID19DataSC1.csv
+    ├── COVID19DataSC1.csv
 ```
 
 ## Setup and Installation
