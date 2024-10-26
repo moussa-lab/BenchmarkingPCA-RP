@@ -28,15 +28,14 @@ The following datasets are used in this analysis:
 Each dataset should be placed in the `Datasets` folder with the following structure:
 
 Datasets/
-    ├── PBMC-Zheng2017/
-    │   ├── PBMC_SC1.csv
-    │   └── PBMCLabels_SC1ClusterLabels.csv
-    ├── Jurkat_Cleaned/
-    │   ├── Jurkat293T_Clean.csv
-    │   └── Jurkat293T_Clean_TrueLabels.csv
-    └── Covid19TCells/
-        ├── COVID19DataSC1.csv
-
+├── PBMC-Zheng2017/
+│   ├── PBMC_SC1.csv
+│   └── PBMCLabels_SC1ClusterLabels.csv
+├── Jurkat_Cleaned/
+│   ├── Jurkat293T_Clean.csv
+│   └── Jurkat293T_Clean_TrueLabels.csv
+└── Covid19TCells/
+    ├── COVID19DataSC1.csv
 ## Setup and Installation
 
 ### Prerequisites
