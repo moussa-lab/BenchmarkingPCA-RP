@@ -25,7 +25,7 @@ The following datasets are used in this analysis:
 - `Labeled_PBMC` and `Unlabeled_PBMC`
 - `Covid19`
 
-Each dataset should be placed in the `Datasets` folder with the following structure:
+Each dataset is placed in the `Datasets` folder with the following structure:
 
 ```
 Datasets/
@@ -51,8 +51,10 @@ Datasets/
 ### Installation
 
 1. Clone the repository:
-
+   
+```bash
 git clone https://github.com/moussa-lab/BenchmarkingPCA-RP.git
+```
 
 2. Create and activate a virtual environment:
 
