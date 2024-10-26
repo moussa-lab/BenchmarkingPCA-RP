@@ -26,7 +26,7 @@ The following datasets are used in this analysis:
 - `Covid19`
 
 Each dataset should be placed in the `Datasets` folder with the following structure:
-
+```
 Datasets/
 ├── PBMC-Zheng2017/
 │&nbsp;&nbsp;&nbsp;&nbsp;├── PBMC_SC1.csv
@@ -36,7 +36,8 @@ Datasets/
 │&nbsp;&nbsp;&nbsp;&nbsp;└── Jurkat293T_Clean_TrueLabels.csv
 └── Covid19TCells/
 &nbsp;&nbsp;&nbsp;&nbsp;├── COVID19DataSC1.csv
-    
+```
+
 ## Setup and Installation
 
 ### Prerequisites
