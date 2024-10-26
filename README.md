@@ -14,8 +14,8 @@ This repository contains Python scripts for evaluating various dimensionality re
 
 - **Dimensionality Reduction Methods**: Includes PCA, Gaussian Random Projection, Sparse Random Projection, and UMAP.
 - **Clustering Algorithms**: Supports Spherical KMeans and Agglomerative (Hierarchical) clustering.
-- **Metrics**: Computes clustering metrics including Dunn Index, Adjusted Rand Index, Mutual Information, Accuracy, Gap Statistic, and WCSS.
-- **Visualization**: Generates 2D and 3D visualizations for UMAP, PCA, and Random Projections.
+- **Metrics**: Computes clustering metrics including Dunn Index, Mutual Information, Accuracy, Gap Statistic, and WCSS.
+- **Visualization**: Generates 2D visualizations for UMAP, PCA, and Random Projections.
 - **Parallel Processing**: Utilizes parallel processing to handle computationally heavy tasks efficiently.
 
 ## Datasets
