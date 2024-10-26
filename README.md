@@ -64,9 +64,21 @@ pip install -r requirements.txt
 ```
 ## Usage
 
-1. Run the main script for dimensionality reduction and clustering:
-```bash
-python main.py
+
+1. To preprocess the unlabeled PBMC dataset, use the Jupyter Notebook:
+
+   [PBMC_Unlabeled_Dataset_Construction.ipynb](PBMC_Unlabeled_Dataset_Construction.ipynb)
+
+You have two options for running the main benchmarking code:
+
+1. **Jupyter Notebook**: If you prefer a notebook environment, use:
+
+   [Benchmarking-RP-PCA.ipynb](Benchmarking-RP-PCA.ipynb)
+
+2. **Python Script**: Alternatively, run the main script directly:
+
+   ```bash
+   python main.py
 ```
 ## Results
 
