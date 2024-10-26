@@ -59,15 +59,15 @@ git clone https://github.com/moussa-lab/BenchmarkingPCA-RP.git
 2. Create and activate a virtual environment:
 
 3. Install the required packages:
-
+```bash
 pip install -r requirements.txt
-
+```
 ## Usage
 
 1. Run the main script for dimensionality reduction and clustering:
-
+```bash
 python main.py
-
+```
 ## Results
 
 Results are saved in `output` and `pca_results` directories:
