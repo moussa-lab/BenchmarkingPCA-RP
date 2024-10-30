@@ -790,11 +790,7 @@ def run_pca_experiment(data_path, components_list, output_dir, dataset_name):
                 sheet_name = f"PCA_{n_components}"
                 pca_df.to_excel(writer, sheet_name=sheet_name, index=False)
         print(f"PCA components saved to {pca_output_path}")
-<<<<<<< HEAD
         
-=======
-
->>>>>>> 077f17efda4b3bddfd85dc59e8397346636063ea
 def load_and_plot_and_save_combined_column_sums(file_path1, dataset_name1, file_path2, dataset_name2, save_path):
     try:
         # Load the column sums CSV files
@@ -879,7 +875,6 @@ if __name__ == "__main__":
 
     # Output directory for full experiment
     output_directory = "./output"
-<<<<<<< HEAD
 
     # Process all datasets
     process_all_datasets(datasets_info, n_components_range, output_dir=output_directory)
@@ -901,6 +896,3 @@ if __name__ == "__main__":
     for dataset_name, data_path in pbmc_data_paths.items():
         print(f"\n=== Running PCA Experiment for {dataset_name} ===")
         run_pca_experiment(data_path, components_to_test, output_directory, dataset_name)
-=======
-    process_all_datasets(datasets_info, n_components_range, output_dir=output_directory)
->>>>>>> 077f17efda4b3bddfd85dc59e8397346636063ea
