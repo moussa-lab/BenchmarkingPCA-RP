@@ -237,10 +237,9 @@ def plot_metrics_and_timing(results_df, timing_df, dataset_name, metrics_folder,
     timing_palette_colors = timing_palette
     timing_method_colors = dict(zip(methods, timing_palette_colors))
     
-    # Plotting clustering indices with different trend lines separately
+    # Plotting clustering indices 
     for clust_method in clustering_methods:
         for index in metrics:
-            # Check if the metric exists and has valid data
             if index not in results_df.columns or results_df[index].isnull().all():
                 continue
             plt.figure(figsize=(10, 5))
@@ -269,7 +268,7 @@ def plot_metrics_and_timing(results_df, timing_df, dataset_name, metrics_folder,
             plt.savefig(os.path.join(metrics_folder, plot_filename), bbox_inches='tight', dpi=300)
             plt.close()
     
-    # Plotting execution times with trend lines using sns.regplot
+    # Plotting execution times
     plt.figure(figsize=(14, 6))
     for method in methods:
         method_data = timing_df[timing_df['Reduction Method'].str.strip() == method]
@@ -340,7 +339,7 @@ def process_component(data, method, n_components, n_clusters, pca_type=None, tru
     elif method == 'SparseRandomProjection':
         reducer = SparseRandomProjection(n_components=n_components, random_state=42)
         method_label = 'SparseRandomProjection'
-    else:  # GaussianRandomProjection
+    else:  
         reducer = GaussianRandomProjection(n_components=n_components, random_state=42)
         method_label = 'GaussianRandomProjection'
         
@@ -349,12 +348,10 @@ def process_component(data, method, n_components, n_clusters, pca_type=None, tru
     reduced_data = reducer.fit_transform(data)
     reduction_time = time.time() - start_time
 
-    # Ensure reduced data has same number of rows as original data
     assert reduced_data.shape[0] == data.shape[0], "Mismatch between reduced data and original data!"
     
-    # Identify zero vectors based on norm
     norms = np.linalg.norm(reduced_data, axis=1)
-    non_zero_indices = norms > 1e-10  # Tolerance to account for floating point precision
+    non_zero_indices = norms > 1e-10 
     num_zero_vectors = np.sum(~non_zero_indices)
     if num_zero_vectors > 0:
         print(f"[INFO] Found {num_zero_vectors} zero vectors in {method_label} with {n_components} components. Removing them before clustering.")
@@ -362,7 +359,6 @@ def process_component(data, method, n_components, n_clusters, pca_type=None, tru
         if true_labels is not None:
             true_labels = true_labels[non_zero_indices].astype(int)
 
-    # Check if enough samples remain for clustering
     if reduced_data.shape[0] < n_clusters:
         print(f"[WARNING] Number of samples after removing zero vectors ({reduced_data.shape[0]}) is less than the number of clusters ({n_clusters}). Skipping clustering for {method_label} with {n_components} components.")
         return [], []
@@ -373,20 +369,12 @@ def process_component(data, method, n_components, n_clusters, pca_type=None, tru
     # Clustering methods
     for clustering_method in ['Hierarchical', 'SphericalKMeans']:
         if clustering_method == 'Hierarchical':
-            #clusterer = AgglomerativeClustering(n_clusters=n_clusters, linkage='ward', compute_distances=True)
             distance_matrix = pdist(reduced_data, metric='cosine')
             Z = linkage(distance_matrix, method='ward')
-            # Extract cluster labels
             predicted_labels = fcluster(Z, n_clusters, criterion='maxclust')
-            #predicted_labels = clusterer.fit_predict(reduced_data)
-
-        else:  # SphericalKMeans
+        else:  
             clusterer = SphericalKMeans(n_clusters=n_clusters, random_state=42)
             predicted_labels = clusterer.fit_predict(reduced_data)
-
-        #start_time = time.time()
-        #predicted_labels = clusterer.fit_predict(reduced_data)
-        #clustering_time = time.time() - start_time
 
         # Calculate WCSS
         wcss = compute_wcss(reduced_data, predicted_labels)
@@ -489,18 +477,18 @@ datasets_info = {
     }
 }
 def process_all_datasets(datasets_info, n_components_range, output_dir="output"):
-    # Define palettes for each section
+    
+    # Palettes for each section
     clustering_metrics_palette = 'magma'
     timing_palette = ['blue', 'orange', 'red', 'green']
     umap_palette = 'viridis'
     
-    # Define marker styles for datasets
+    # Marker styles for datasets
     dataset_marker_styles = ['o', 's', 'D', '*', 'v', '<', '>', 'p', '^']
     dataset_markers = {}
     for dataset_name, marker in zip(datasets_info.keys(), dataset_marker_styles):
         dataset_markers[dataset_name] = marker
 
-    # Clear the output directory if it exists
     if os.path.exists(output_dir):
         print(f"Clearing existing output directory: {output_dir}")
         shutil.rmtree(output_dir)
@@ -538,7 +526,6 @@ def process_all_datasets(datasets_info, n_components_range, output_dir="output")
         # Transpose data to have samples as rows and features as columns
         data_transposed = dataset.T.values  # Shape: (samples, features)
 
-        # Load labels if available
         if info['label_path'] is not None:
             try:
                 labels_df = pd.read_csv(info['label_path'])
@@ -604,6 +591,7 @@ def process_all_datasets(datasets_info, n_components_range, output_dir="output")
             print(f"WCSS boxplot saved in {metrics_plots_folder}")
         except Exception as e:
             print(f"Error plotting WCSS boxplot for {dataset_name}: {e}")
+            
         # Plot clustering metrics and timing for this dataset
         print("Plotting clustering metrics and execution times for this dataset...")
         try:
@@ -634,17 +622,13 @@ def process_all_datasets(datasets_info, n_components_range, output_dir="output")
         print("Generating visualizations (UMAP, PCA, Random Projections)...")
         if info['type'] == 'labeled':
             try:
-                # Apply dimensionality reduction to 500 dimensions
+                
                 pca_full = PCA(n_components=500, svd_solver='full')
                 pca_full_result = pca_full.fit_transform(data_transposed)
-                
-                # Apply dimensionality reduction to 500 dimensions using Randomized PCA
                 pca_randomized = PCA(n_components=500, svd_solver='randomized', random_state=42)
                 pca_randomized_result = pca_randomized.fit_transform(data_transposed)
-
                 grp = GaussianRandomProjection(n_components=500, random_state=42)
                 grp_result = grp.fit_transform(data_transposed)
-
                 srp = SparseRandomProjection(n_components=500, random_state=42)
                 srp_result = srp.fit_transform(data_transposed)
 
@@ -654,6 +638,7 @@ def process_all_datasets(datasets_info, n_components_range, output_dir="output")
                 pca_randomized_umap = umap_model.fit_transform(pca_randomized_result)  
                 grp_umap = umap_model.fit_transform(grp_result)
                 srp_umap = umap_model.fit_transform(srp_result)
+                
                 # Perform clustering and evaluation
                 for method_name, umap_data in zip(
                     ['PCA Full', 'PCA Randomized', 'GRP', 'SRP'],
@@ -669,6 +654,7 @@ def process_all_datasets(datasets_info, n_components_range, output_dir="output")
                     evaluation_results['Mutual Information'].append(metrics.get('Mutual Information'))
                     evaluation_results['Dunn Index'].append(metrics.get('Dunn Index'))
                     evaluation_results['Adjusted Rand Index'].append(metrics.get('Adjusted Rand Index'))
+                    
                 # Convert evaluation results to DataFrame
                 evaluation_df = pd.DataFrame(evaluation_results)
 
@@ -686,7 +672,7 @@ def process_all_datasets(datasets_info, n_components_range, output_dir="output")
                     folder=umap_plots_folder
                 )
                 
-                # Plot UMAP results for Randomized PCA (New)
+                # Plot UMAP results for Randomized PCA
                 plot_umap_results(
                     pca_randomized_umap, 
                     labels_matched, 
@@ -764,7 +750,6 @@ def run_pca_experiment(data_path, components_list, output_dir, dataset_name):
         print(f"Error loading data for {dataset_name}: {e}")
         return
 
-    # Transpose data to have samples as rows and features as columns
     data_transposed = dataset.T.values
 
     # Dictionary to store column sums and PCA components
@@ -805,24 +790,7 @@ def run_pca_experiment(data_path, components_list, output_dir, dataset_name):
                 sheet_name = f"PCA_{n_components}"
                 pca_df.to_excel(writer, sheet_name=sheet_name, index=False)
         print(f"PCA components saved to {pca_output_path}")
-if __name__ == "__main__":
-    # Paths to the PBMC datasets
-    pbmc_data_paths = {
-        'Labeled_PBMC': '../Datasets/PBMC-Zheng2017/PBMC_SC1.csv',
-        'Unlabeled_PBMC': '../Datasets/Unlabeled_PBMC/unlabled_PBMC.csv'
-    }
-
-    # Components to investigate
-    components_to_test = [200, 400, 600, 800, 1000]
-
-    # Output directory for saving results
-    output_directory = "./pca_results"
-    os.makedirs(output_directory, exist_ok=True)
-
-    # Run the experiment for each dataset
-    for dataset_name, data_path in pbmc_data_paths.items():
-        print(f"\n=== Running PCA Experiment for {dataset_name} ===")
-        run_pca_experiment(data_path, components_to_test, output_directory, dataset_name)
+        
 def load_and_plot_and_save_combined_column_sums(file_path1, dataset_name1, file_path2, dataset_name2, save_path):
     try:
         # Load the column sums CSV files
@@ -879,3 +847,21 @@ if __name__ == "__main__":
 
     # Process all datasets
     process_all_datasets(datasets_info, n_components_range, output_dir=output_directory)
+    
+        # PBMC datasets
+    pbmc_data_paths = {
+        'Labeled_PBMC': '../Datasets/PBMC-Zheng2017/PBMC_SC1.csv',
+        'Unlabeled_PBMC': '../Datasets/Unlabeled_PBMC/unlabled_PBMC.csv'
+    }
+
+    # Components to investigate
+    components_to_test = [200, 400, 600, 800, 1000]
+
+    # Output directory for saving results
+    output_directory = "./pca_results"
+    os.makedirs(output_directory, exist_ok=True)
+
+    # Run the experiment for each dataset
+    for dataset_name, data_path in pbmc_data_paths.items():
+        print(f"\n=== Running PCA Experiment for {dataset_name} ===")
+        run_pca_experiment(data_path, components_to_test, output_directory, dataset_name)
