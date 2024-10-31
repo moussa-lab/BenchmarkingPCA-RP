@@ -160,27 +160,27 @@ def plot_wcss_boxplot(results_df, dataset_name, metrics_folder, base_palette):
     methods = results_df['Reduction Method'].unique()
     clustering_methods = results_df['Clustering Method'].unique()
     
-    # Check if WCSS is present in the results
+    # We need to check if WCSS is present in the results
     if 'WCSS' not in results_df.columns or results_df['WCSS'].isnull().all():
         print("WCSS metric is missing or has no valid data.")
         return
 
-    # Define broader bins for the components
+    # Defining broader bins for the components, for our analysis we're interested in exploring the effect of components < 25 and >= 25
     def categorize_components(x):
         if 5 <= x < 25:
             return 'Components < 25'
         else: 
             return 'Components >= 25'
 
-    # Apply categorization
+    # Apply categorization to the components
     results_df['Component Category'] = results_df['Components'].apply(categorize_components)
 
-    # Generate color palette for the component categories
+    # Generate color palette for the component categories 
     component_categories = results_df['Component Category'].unique()
     palette = sns.color_palette('husl', n_colors=len(component_categories))
     component_colors = dict(zip(component_categories, palette))
     
-    # Plotting WCSS as a box plot for each clustering method
+    # Plotting WCSS as a box plot for each clustering method and reduction method
     for clust_method in clustering_methods:
         plt.figure(figsize=(12, 6))
         sns.boxplot(
@@ -196,7 +196,7 @@ def plot_wcss_boxplot(results_df, dataset_name, metrics_folder, base_palette):
         plt.ylabel('WCSS Value', fontsize=12)
         plt.xticks(rotation=45)
         
-        # Position the legend inside the plot
+        # Position the legend inside the plot area
         plt.legend(
             title='Component Category',
             loc='lower right',
@@ -214,13 +214,13 @@ def plot_metrics_and_timing(results_df, timing_df, dataset_name, metrics_folder,
     methods = results_df['Reduction Method'].unique()
     clustering_methods = results_df['Clustering Method'].unique()
     
-    # Determine if the dataset is labeled
+    # Determine if the dataset is labeled or not based on the presence of Adjusted Rand Index
     if results_df['Adjusted Rand Index'].notnull().any():
         labeled = True
     else:
         labeled = False
 
-    # Define metrics based on dataset type
+    # Define metrics based on dataset type (labeled or unlabeled)
     if labeled:
         metrics = ['Adjusted Rand Index', 'WCSS', 'Mutual Information', 'Accuracy',
                 'Dunn Index', 'Silhouette Score', 'Gap Statistic',
@@ -229,7 +229,7 @@ def plot_metrics_and_timing(results_df, timing_df, dataset_name, metrics_folder,
         metrics = ['Dunn Index', 'WCSS', 'Silhouette Score', 'Gap Statistic',
                 'Calinski-Harabasz Index', 'Davies-Bouldin Index']
     
-    # Generate color palettes for methods
+    # Generate color palettes for methods based on metrics and timing
     num_methods = len(methods)
     metrics_palette_colors = sns.color_palette(metrics_palette, n_colors=num_methods)
     metrics_method_colors = dict(zip(methods, metrics_palette_colors))
@@ -260,7 +260,7 @@ def plot_metrics_and_timing(results_df, timing_df, dataset_name, metrics_folder,
             plt.xlabel('Number of Components', fontsize=12)
             plt.ylabel(f'{index} Value', fontsize=12)
             plt.legend()
-            # Cap accuracy at 1
+            # Cap accuracy at 1 for better visualization of the plot
             if index == 'Accuracy':
                 plt.ylim(0, 1)
             plt.tight_layout()
@@ -350,6 +350,8 @@ def process_component(data, method, n_components, n_clusters, pca_type=None, tru
 
     assert reduced_data.shape[0] == data.shape[0], "Mismatch between reduced data and original data!"
     
+    
+    # The code below is to handle the case where the reduced data has zero vectors (norm = 0) which can cause issues with clustering algorithms 
     norms = np.linalg.norm(reduced_data, axis=1)
     non_zero_indices = norms > 1e-10 
     num_zero_vectors = np.sum(~non_zero_indices)
@@ -391,7 +393,8 @@ def process_component(data, method, n_components, n_clusters, pca_type=None, tru
                 'Accuracy': accuracy,
                 'Dunn Index': None,
                 'Gap Statistic': gap,
-                'WCSS': wcss
+                'WCSS': wcss,
+                'Adjusted Rand Index': adjusted_rand
             }
         else:
             # Unlabeled Data Metrics
@@ -523,8 +526,8 @@ def process_all_datasets(datasets_info, n_components_range, output_dir="output")
             print(f"Error loading data for {dataset_name}: {e}")
             continue
 
-        # Transpose data to have samples as rows and features as columns
-        data_transposed = dataset.T.values  # Shape: (samples, features)
+        # Transpose data to have cells as rows and genes as columns
+        data_transposed = dataset.T.values  # Shape: (cells, genes)
 
         if info['label_path'] is not None:
             try:
@@ -791,6 +794,7 @@ def run_pca_experiment(data_path, components_list, output_dir, dataset_name):
                 pca_df.to_excel(writer, sheet_name=sheet_name, index=False)
         print(f"PCA components saved to {pca_output_path}")
         
+# Function to load and plot combined column sums for two datasets
 def load_and_plot_and_save_combined_column_sums(file_path1, dataset_name1, file_path2, dataset_name2, save_path):
     try:
         # Load the column sums CSV files
@@ -840,7 +844,6 @@ load_and_plot_and_save_combined_column_sums(labeled_pbmc_file, 'Labeled PBMC', u
 if __name__ == "__main__":
     # Range for number of components
     n_components_range = list(range(5, 25, 1))  + list(range(25, 1001, 25)) 
-    #n_components_range = list(range(5, 16, 5)) + list(range(50, 101, 50))
 
     # Output directory
     output_directory = "./output"
@@ -848,7 +851,7 @@ if __name__ == "__main__":
     # Process all datasets
     process_all_datasets(datasets_info, n_components_range, output_dir=output_directory)
     
-        # PBMC datasets
+    # PBMC datasets
     pbmc_data_paths = {
         'Labeled_PBMC': '../Datasets/PBMC-Zheng2017/PBMC_SC1.csv',
         'Unlabeled_PBMC': '../Datasets/Unlabeled_PBMC/unlabled_PBMC.csv'
