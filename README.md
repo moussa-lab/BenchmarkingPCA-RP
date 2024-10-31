@@ -87,6 +87,9 @@ Results are saved in `output` and `pca_results` directories:
 - `Metrics_Plots/` and `Timing_Plots/`: Evaluation metrics and timing results for each dataset.
 - `Combined_Column_Means_Plot.png`: Mean plot for total column means across components in `pca_results`.
 
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ## Acknowledgments
 This work is supported by the following grants: NSF-2341725, NIH-NCI K25CA270079, OU-BIC2.0
 
